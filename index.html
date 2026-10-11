@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>หมากฮอสไทย</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ===== หน้าแรก ===== -->
+    <section id="screen-title" class="screen active">
+      <div class="title-pieces" aria-hidden="true">
+        <span class="piece white"></span>
+        <span class="piece black king"></span>
+        <span class="piece white king"></span>
+        <span class="piece black"></span>
+      </div>
+      <h1 class="logo">หมากฮอสไทย</h1>
+      <p class="tagline">Thai Checkers · Mak-hot</p>
+      <div class="menu">
+        <button id="btn-play" class="btn btn-primary btn-big" type="button">▶ เล่นเลย</button>
+        <button id="btn-howto" class="btn btn-ghost" type="button">📖 วิธีเล่น</button>
+      </div>
+    </section>
+
+    <!-- ===== หน้าเลือกโหมด ===== -->
+    <section id="screen-mode" class="screen">
+      <h2 class="screen-title">เลือกโหมดการเล่น</h2>
+
+      <div class="mode-cards">
+        <button class="mode-card selected" type="button" data-mode="ai">
+          <span class="mode-icon">🤖</span>
+          <span class="mode-name">เล่นกับคอมพิวเตอร์</span>
+          <span class="mode-desc">ฝึกฝีมือคนเดียว เลือกระดับความยากได้</span>
+        </button>
+        <button class="mode-card" type="button" data-mode="pvp">
+          <span class="mode-icon">👥</span>
+          <span class="mode-name">เล่น 2 คน</span>
+          <span class="mode-desc">เล่นกับเพื่อนบนเครื่องเดียวกัน</span>
+        </button>
+      </div>
+
+      <div id="ai-options" class="options">
+        <div class="option-row">
+          <span class="option-label">ระดับความยาก</span>
+          <div class="seg" data-group="level">
+            <button type="button" data-value="easy">ง่าย</button>
+            <button type="button" data-value="normal" class="selected">ปานกลาง</button>
+            <button type="button" data-value="hard">ยาก</button>
+          </div>
+        </div>
+        <div class="option-row">
+          <span class="option-label">คุณเล่นเป็น</span>
+          <div class="seg" data-group="side">
+            <button type="button" data-value="white" class="selected">ขาว (เดินก่อน)</button>
+            <button type="button" data-value="black">ดำ</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu row">
+        <button id="btn-back-title" class="btn btn-ghost" type="button">← กลับ</button>
+        <button id="btn-start" class="btn btn-primary" type="button">เริ่มเกม ▶</button>
+      </div>
+    </section>
+
+    <!-- ===== หน้าเล่นเกม ===== -->
+    <section id="screen-game" class="screen">
+      <header class="game-header">
+        <button id="btn-menu" class="btn btn-small btn-ghost" type="button">☰ เมนู</button>
+        <div class="game-title">หมากฮอสไทย <small id="mode-label"></small></div>
+        <button id="btn-rules" class="btn btn-small btn-ghost" type="button">? กติกา</button>
+      </header>
+
+      <div class="scoreboard">
+        <div class="score"><span class="chip white"></span><span id="name-white"></span> <strong id="white-count">8</strong></div>
+        <div class="score right"><strong id="black-count">8</strong> <span id="name-black"></span><span class="chip black"></span></div>
+      </div>
+
+      <div class="status-box"><span id="turn-dot" class="chip white"></span><span id="status"></span></div>
+
+      <div id="board" class="board" role="grid" aria-label="กระดานหมากฮอสไทย 8x8"></div>
+
+      <div class="game-footer">
+        <span class="moves">เดินไปแล้ว <strong id="move-count">0</strong> ตา</span>
+        <div class="footer-btns">
+          <button id="btn-restart" class="btn btn-small" type="button">↻ เริ่มใหม่</button>
+          <button id="btn-surrender" class="btn btn-small btn-danger" type="button">🏳 ยอมแพ้</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== หน้าจบเกม ===== -->
+  <div id="overlay-gameover" class="overlay hidden">
+    <div id="go-card" class="dialog gameover">
+      <div id="go-icon" class="go-icon"></div>
+      <h2 id="go-title" class="go-title"></h2>
+      <p id="go-sub" class="go-sub"></p>
+      <p id="go-reason" class="go-reason"></p>
+      <div id="go-stats" class="go-stats"></div>
+      <div class="go-buttons">
+        <button id="btn-again" class="btn btn-primary" type="button">↻ เล่นอีกครั้ง</button>
+        <button id="btn-change-mode" class="btn" type="button">เปลี่ยนโหมด</button>
+        <button id="btn-home" class="btn btn-ghost" type="button">หน้าแรก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== กติกา ===== -->
+  <div id="overlay-rules" class="overlay hidden">
+    <div class="dialog">
+      <h2>📖 กติกาหมากฮอสไทย</h2>
+      <ul class="rules">
+        <li>กระดาน 8×8 ฝ่ายละ 8 ตัว วางบนช่องสีเข้มของ 2 แถวแรกของแต่ละฝ่าย ขาวเดินก่อน</li>
+        <li>เบี้ยเดินเฉียงไปข้างหน้าทีละ 1 ช่อง และกินได้เฉพาะข้างหน้า (กินถอยหลังไม่ได้)</li>
+        <li>เบี้ยที่เดินถึงแถวสุดท้ายจะกลายเป็น "ฮอส" (★) เดินได้ไกลหลายช่องทุกทิศตามแนวเฉียง</li>
+        <li>ฮอสกินได้ทั้งหน้าและหลัง กินระยะไกลได้ แต่ต้องลงช่องที่อยู่ติดหลังหมากที่กินทันที</li>
+        <li>ถ้ากินได้ ต้องกิน เลือกทางกินใดก็ได้ (ไม่บังคับกินจำนวนมากที่สุด) และกินต่อเนื่องได้</li>
+        <li>หมากที่ถูกกินจะถูกยกออกทันที เบี้ยที่กินจนถึงแถวสุดท้ายจะเป็นฮอสและจบตาเดิน</li>
+        <li>ฝ่ายที่หมากหมดหรือเดินไม่ได้ เป็นฝ่ายแพ้</li>
+        <li>เสมอเมื่อตำแหน่งซ้ำ 3 ครั้ง หรือเดินแต่ฮอสโดยไม่กินครบฝ่ายละ 32 ตา</li>
+      </ul>
+      <div class="dialog-buttons">
+        <button id="btn-rules-close" class="btn btn-primary" type="button">เข้าใจแล้ว</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ยืนยัน ===== -->
+  <div id="overlay-confirm" class="overlay hidden">
+    <div class="dialog small">
+      <p id="confirm-text" class="confirm-text"></p>
+      <div class="dialog-buttons">
+        <button id="confirm-cancel" class="btn btn-ghost" type="button">ยกเลิก</button>
+        <button id="confirm-ok" class="btn btn-danger" type="button">ตกลง</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
